@@ -31,5 +31,24 @@ public class StudentService {
 		//결과 반환
 		return stdList;
 	}
+
+	/**학과 선택 조회
+	 * @return stdList
+	 * @throws Exception
+	 */
+	public List<Student> selectDept(String departmentName)  throws Exception {
+		
+		//Connection 생성
+		Connection conn=getConnection();
+				
+		//DAO 메서드 호출 후 결과 반환 받기
+		List<Student>stdList=dao.selectDept(conn, departmentName);
+		//트랜잭션 처리(DML인 경우에만 진행)
+				
+		//Connection 객체 반환
+		close(conn);
+		
+		return stdList;
+	}
 	
 }

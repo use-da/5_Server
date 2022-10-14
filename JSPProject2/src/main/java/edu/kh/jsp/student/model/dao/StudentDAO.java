@@ -18,57 +18,92 @@ public class StudentDAO {
 	private Statement stmt;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	
+
 	private Properties prop;
-	
+
 	public StudentDAO() {
 		try {
-			String filePath=StudentDAO.class.getResource("/edu/kh/jsp/sql/student-sql.xml").getPath();
-							
-			prop=new Properties();
+			String filePath = StudentDAO.class.getResource("/edu/kh/jsp/sql/student-sql.xml").getPath();
+
+			prop = new Properties();
 			prop.loadFromXML(new FileInputStream(filePath));
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**학생 전체 조회 DAO
+	/**
+	 * 학생 전체 조회 DAO
+	 * 
 	 * @param conn
 	 * @return stdList
 	 */
 	public List<Student> selectAll(Connection conn) throws Exception {
-		
-		//결과 저장용 변수 선언
-		List<Student>stdList=new ArrayList<>();
-		
+
+		// 결과 저장용 변수 선언
+		List<Student> stdList = new ArrayList<>();
+
 		try {
 			// SQL 작성하기
-			String sql=prop.getProperty("selectAll");
-			
-			//Statement 객체 생성
-			stmt=conn.createStatement();
-			
-			rs=stmt.executeQuery(sql);
-			
-			while(rs.next()) {
-				String studentNo=rs.getString("STUDENT_NO");
-				String studentName=rs.getString("STUDENT_NAME");
-				String studentAddress=rs.getString("STUDENT_ADDRESS");
-				String departmentName=rs.getString("DEPARTMENT_NAME");
-				
+			String sql = prop.getProperty("selectAll");
+
+			// Statement 객체 생성
+			stmt = conn.createStatement();
+
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				String studentNo = rs.getString("STUDENT_NO");
+				String studentName = rs.getString("STUDENT_NAME");
+				String studentAddress = rs.getString("STUDENT_ADDRESS");
+				String departmentName = rs.getString("DEPARTMENT_NAME");
+
 				stdList.add(new Student(studentNo, studentName, studentAddress, departmentName));
-				
+
 			}
-			
-			
+
 		} finally {
-			//사용한 JDBC 객체 자원 반환
+			// 사용한 JDBC 객체 자원 반환
 			close(rs);
 			close(stmt);
 		}
-		
-		//결과 반환
+
+		// 결과 반환
+		return stdList;
+	}
+
+	public List<Student> selectDept(Connection conn, String departmentName) throws Exception {
+
+		// 결과 저장용 변수 선언
+		List<Student> stdList = new ArrayList<>();
+
+		try {
+			// SQL 작성하기
+			String sql = prop.getProperty("selectDept");
+
+			// Statement 객체 생성
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, departmentName);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				String studentNo = rs.getString("STUDENT_NO");
+				String studentName = rs.getString("STUDENT_NAME");
+				String studentAddress = rs.getString("STUDENT_ADDRESS");
+				departmentName = rs.getString("DEPARTMENT_NAME");
+				
+				stdList.add(new Student(studentNo, studentName, studentAddress, departmentName));
+
+			}
+
+		} finally {
+			// 사용한 JDBC 객체 자원 반환
+			close(rs);
+			close(pstmt);
+		}
+
 		return stdList;
 	}
 }

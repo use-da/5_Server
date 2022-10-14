@@ -56,6 +56,13 @@ public class Student {
 		return "Student [studentNo=" + studentNo + ", studentName=" + studentName + ", studentAddress=" + studentAddress
 				+ ", departmentName=" + departmentName + "]";
 	}
+
+	public Student(String studentNo, String studentName, String studentAddress) {
+		super();
+		this.studentNo = studentNo;
+		this.studentName = studentName;
+		this.studentAddress = studentAddress;
+	}
 	
 	
 	

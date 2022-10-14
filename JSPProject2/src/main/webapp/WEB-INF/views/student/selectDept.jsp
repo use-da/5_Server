@@ -7,7 +7,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>학생 전체 조회</title>
+    <title>학과 검색 조회</title>
+    <style>
+        .th{background-color: green;}
+        .td{background-color: yellow;}
+    </style>
 </head>
 <body>
     <table border="1">
