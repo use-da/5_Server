@@ -1,0 +1,121 @@
+package edu.kh.project.member.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import edu.kh.project.member.model.dao.MemberDAO;
+import edu.kh.project.member.model.service.MemberService;
+import edu.kh.project.member.model.vo.Member;
+
+@WebServlet("/member/login")
+public class LoginServlet extends HttpServlet{
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		MemberService service=new MemberService();
+		
+		try {
+			//파라미터 얻어오기
+			String inputEmail = req.getParameter("inputEmail");
+			String inputPw = req.getParameter("inputPw");
+			
+			Member member = new Member();
+			member.setMemberEmail(inputEmail);
+			member.setMemberPw(inputPw);
+			
+			Member loginMember=service.login(member);
+			
+//			System.out.println(); 로그인 멤버 확인용 브레이크 포인트
+			
+			/* 
+			forward를 하는 경우
+			- 요청을 다른 Servlet/JSP로 위임
+			  -> 어떤 요청이 위임됐는지 알아야 되기 때문에 주소창에 요청 주소가 계속 남아있다 
+			
+			카페-> 커피 주문 -> 캐셔 -> 바리스타       (forward)
+			카페-> 김밥 주문 -> 캐셔 -> 옆집으로 가세요  (redirect)
+			
+			 redirect(재요청)
+		 	 - servlet이 다른 주소를 요청함
+			 - 요청에 대한 응답화면을 직접 만드는 것이 아닌 다른 응답화면을 구현하는 Servlet을 요청하여
+			   대신 화면을 만들게 하는 것
+			
+			forward / redirect 차이점
+			forward | 주소창 변화X, JSP경로 작성,  req, resp가 유지된다
+			redirect| 주소창 변화O, 요청 주소 작성, req, resp가 유지되지 않는다
+			*/
+//			RequestDispatcher dispatcher=req.getRequestDispatcher("/WEB-INF/views/common/main.jsp");
+//			req.setAttribute("loginMember", loginMember);
+//			dispatcher.forward(req,resp);
+			
+			//request scope에 속성을 추가해도
+			//redirect를 하는 경우 request가 다시 만들어져 유지되지 않음
+//			req.setAttribute("loginMember", loginMember);
+			
+			
+			// 해결방법 : Session scope이용
+			// 1) HttpSession 객체 얻어오기
+			HttpSession session = req.getSession();
+			if(loginMember != null) {                               //로그인 성공
+				// 2) Session scope에 속성 추가하기
+				session.setAttribute("loginMember", loginMember);
+				// 3) Session 만료시간 설정(초 단위로 지정)
+				//    클라이언트가 새로운 요청을 할 때마다 초기화
+				// ex) 세션만료 10분설정 8분에 만료경고 출력
+				session.setMaxInactiveInterval(3600);
+				
+				//-------------------------------------------------
+				// 아이디 저장(Cookie)
+				/* Cookie 
+				   - 클라이언트 측(브라우저)에서 관리하는 파일
+				   - 쿠키파일에 등록된 주소 요청 시 자동으로 요청에 첨부되어 서버로 전달
+				   - 서버로 전달된 쿠키에 값 추가, 수정, 삭제 등을 진행한 후 다시 클라이언트에게 반환
+				*/
+				
+				// 1) 쿠키 객체 생성
+				// - 생성된 쿠키 객체를 resp를 이용해 클라이언트에게 전달하면 클라이언트 컴퓨터에 파일 형태로 저장
+				Cookie cookie=new Cookie("saveId",inputEmail);
+				
+				// 2) 아이디 저장 체크박스 체크 확인
+				if(req.getParameter("saveId")!=null) {
+					// 3) 쿠키가 유지될 수 있는 유효기간 설정(초 단위)
+					cookie.setMaxAge(60*60*24*30);
+				}else {
+					// 4) 쿠키의 유효기간을 0초로 설정
+					// == 클라이언트에 저장된 saveId 쿠키를 삭제하라는 의미
+					// (같은 key 값의 쿠키가 저장되면 덮어쓰기가 일어남, 이상한 숫자 뜨고 새로고침하면 없어진다)
+					cookie.setMaxAge(0);
+				}
+				// 5) 생성된 쿠키가 적용되어질 요청 주소를 지정
+				cookie.setPath("/"); //메인 페이지 주소 == 메인 페이지의 하위 주소 모두 적용
+				
+				// 6) 설정 완료된 쿠키 객체를 클라이언트에게 전달
+				resp.addCookie(cookie);
+				
+				
+				//-------------------------------------------------
+			}else {                                                //로그인 실패
+				session.setAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
+			}
+			//메인페이지로 redirect -> 메인 페이지를 요청한 것이기 때문에 
+			//주소창의 주소가 메인페이지 주소(/)로 변함
+			resp.sendRedirect("/");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		
+	}
+}

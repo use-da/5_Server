@@ -41,31 +41,62 @@
 
 
         <section class="content">
-            <section class="content-1"></section>
+            <section class="content-1">
+                ${loginMember}
+            </section>
             <section class="content-2">
-                <form action="#" name="login-frm">
-                    <!--아이디, 비번, 로그인 버튼-->
-                    <fieldset id="id-pw-area">
-                        <section>
-                            <input type="text" name="inputId" placeholder="아이디"
-                            autocomplete="off">
-                            <input type="password" name="inputPw" placeholder="비밀번호"
-                            autocomplete="off">
-                        </section>
-                        <section>
-                            <button>로그인</button> <!--submit이 기본값-->
-                        </section>
-                    </fieldset>
-                    <label>
-                        <input type="checkbox" name="saveId">아이디 저장
-                    </label><!--label태그 내부에 input태그를 작성하면 자동 연결된다-->
-                    <!-- 회원가입/ ID / PW 찾기-->
-                    <article id="signUp-find-area">
-                        <a href="#">회원가입</a>
-                        <span>|</span>
-                        <a href="#">ID/PW 찾기</a>
-                    </article>
-                </form>
+                <%-- 로그인 여부에 따라 출력 화면 변경--%>
+                <c:choose>
+                    <%-- 로그인 X인 경우 --%>
+                    <c:when test="${empty sessionScope.loginMember}">
+                        <form action="/member/login" name="login-frm" method="POST">
+                            <!--아이디, 비번, 로그인 버튼-->
+                            <fieldset id="id-pw-area">
+                                <section>
+                                    <input type="text" name="inputEmail" placeholder="이메일"
+                                    autocomplete="off" value="${cookie.saveId.value}">
+                                <!--자동완성off                쿠키 중 saveId에 저장된 값-->
+                                    <input type="password" name="inputPw" placeholder="비밀번호"
+                                    autocomplete="off">
+                                </section>
+                                <section>
+                                    <button>로그인</button> <!--submit이 기본값-->
+                                </section>
+                            </fieldset>
+                            <!--쿠키 중 saveId에 값이 있으면 체크-->
+                            <c:if test="${!empty cookie.saveId}">
+                                <c:set var="temp" value="checked"/> 
+                                <%--c:set -> page scope == if문 나가도 사용--%>
+                            </c:if>
+                            <label>
+                                <input type="checkbox" name="saveId" ${temp}>아이디 저장
+                            </label><!--label태그 내부에 input태그를 작성하면 자동 연결된다-->
+                            <!-- 회원가입/ ID / PW 찾기-->
+                            <article id="signUp-find-area">
+                                <a href="#">회원가입</a>
+                                <span>|</span>
+                                <a href="#">ID/PW 찾기</a>
+                            </article>
+                        </form>
+                    </c:when>
+                    <%-- 로그인 O인 경우 --%>
+                    <c:otherwise>
+                        <article class="login-area">
+                            <!-- 회원프로필 이미지-->
+                            <a href="#">
+                                <img id="member-profile" src="/resources/images/user.png">
+                            </a>
+                            <!-- 회원 닉네임, 로그아웃-->
+                            <div class="my-info">
+                                <div>
+                                    <a href="#" id="nickname">${loginMember.memberNickname}</a>
+                                    <a href="/member/logout" id="logout-btn">로그아웃</a>
+                                </div>
+                                <p>${loginMember.memberEmail}</p>
+                            </div>
+                        </article>
+                    </c:otherwise>
+                </c:choose>
             </section>
         </section>
     </main>

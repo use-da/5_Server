@@ -25,7 +25,7 @@
             </section>
 
             <!-- 헤더 오른쪽 상단 메뉴(드롭다운 메뉴)-->
-            <div class="header-top-menu">
+            <div id="header-top-menu">
                 <a href="/">메인 페이지</a>
                 | 
                 <a href="#">로그인</a>

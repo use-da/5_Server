@@ -15,3 +15,16 @@
             <a href="#">고객센터</a>
         </article>
     </footer>
+
+
+<%-- 
+session scope에 message속성이 존재하는 경우 alert창을 띄워준다.
+header에 쓰면 alert창이 뜰 때 로딩이 멈춘다--%>
+<c:if test="${!empty sessionScope.message}">
+    <script>
+        alert("${sessionScope.message}");
+    </script>
+
+    <%--message 1회 출력 후 session scope에서 제거--%>
+    <c:remove var="message" scope="session"/>
+</c:if>
