@@ -63,6 +63,7 @@
                                     <button>로그인</button> <!--submit이 기본값-->
                                 </section>
                             </fieldset>
+                            
                             <!--쿠키 중 saveId에 값이 있으면 체크-->
                             <c:if test="${!empty cookie.saveId}">
                                 <c:set var="temp" value="checked"/> 
@@ -73,7 +74,7 @@
                             </label><!--label태그 내부에 input태그를 작성하면 자동 연결된다-->
                             <!-- 회원가입/ ID / PW 찾기-->
                             <article id="signUp-find-area">
-                                <a href="#">회원가입</a>
+                                <a href="/member/signUp">회원가입</a>
                                 <span>|</span>
                                 <a href="#">ID/PW 찾기</a>
                             </article>

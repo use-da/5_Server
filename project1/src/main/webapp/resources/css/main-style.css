@@ -258,6 +258,53 @@ header{position : relative;}
     font-weight: bold;
 }
 
+/*메뉴 on/off 체크박스*/
+#header-menu-toggle{
+    display: none;
+}
+
+/*label 태그 중 for 속성값이 header-menu-toggle인 요소*/
+label[for='header-menu-toggle']{
+    cursor: pointer;;
+}
+
+label[for='header-menu-toggle']:hover{
+    text-decoration: underline;
+}
+
+#header-menu-toggle + div{
+    display: none;
+}
+
+#header-menu-toggle:checked + div{
+    display: block;
+}
+
+#header-menu{
+    position: absolute;
+    z-index: 500;
+    right: 0;
+    width: 100px;
+    height: 80px;
+    margin-top: 5px;
+    border: 1px solid black;
+}
+
+#header-menu > a{
+    display: flex;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+#header-menu > a:first-child{
+    border-bottom: 1px solid #ccc;
+}
+
+#header-menu > a:hover{
+    background-color: #455ba890;
+}
+
 /***************************************************************/
 /*로그인 성공 시 화면*/
 .login-area{
