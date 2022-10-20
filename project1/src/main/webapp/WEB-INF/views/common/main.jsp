@@ -90,7 +90,7 @@
                             <!-- 회원 닉네임, 로그아웃-->
                             <div class="my-info">
                                 <div>
-                                    <a href="#" id="nickname">${loginMember.memberNickname}</a>
+                                    <a href="/member/myPage/info" id="nickname">${loginMember.memberNickname}</a>
                                     <a href="/member/logout" id="logout-btn">로그아웃</a>
                                 </div>
                                 <p>${loginMember.memberEmail}</p>

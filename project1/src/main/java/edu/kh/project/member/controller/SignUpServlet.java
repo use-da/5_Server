@@ -25,8 +25,8 @@ public class SignUpServlet extends HttpServlet{
 	//회원가입 진행
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//데이터 문자 인코딩 변환
-		req.setCharacterEncoding("UTF-8");
+		//데이터 문자 인코딩 변환 
+//		req.setCharacterEncoding("UTF-8"); -> 필터에서 함
 		//파라미터 얻어오기
 		String memberEmail=req.getParameter("memberEmail");
 		String memberPw=req.getParameter("memberPw");
